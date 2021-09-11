@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\PostCommentController;
+use App\Http\Controllers\Admin\CommentReplyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,5 +32,7 @@ Route::middleware(['auth' , 'isAdmin'])->prefix('admin')->group(function(){
  Route::get('/user/post/{id}' , [UserController::class , 'showposts'])->name('user.posts');
  Route::resource('/user' , UserController::class);
  Route::resource('/role' , RoleController::class);
- Route::resource('/post' , PostController::class);  
+ Route::resource('/post' , PostController::class);
+ Route::resource('/comment' , PostCommentController::class);
+ Route::resource('/post/reply' , CommentReplyController::class); 
 });

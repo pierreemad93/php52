@@ -2,17 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Post;
-use App\Models\PostComment;
-use App\Models\CommentReply;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use App\Models\PostComment;
+use Illuminate\Http\Request;
 
-
-class PostController extends Controller
+class PostCommentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,8 +16,8 @@ class PostController extends Controller
     public function index()
     {
         // 
-        $posts =Post::all();
-        return view('admin.posts.all' , compact('posts'));
+        $comments = PostComment::all();
+        return view('admin.comments.all' , compact('comments'));
     }
 
     /**
@@ -33,9 +27,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        // 
-
-        return view('admin.posts.create');
+        //
     }
 
     /**
@@ -47,28 +39,13 @@ class PostController extends Controller
     public function store(Request $request)
     {
         //
-        $data = $request->all();
-        $rules = [
-            'title' => ['required' , 'unique:posts' , 'min:4' , 'max:255'] ,
-            'desc' =>['required']  ,
-            'image' =>['mimes:jpg,bmp,png,jpeg'] ,
-            'author' => [Rule::in(Auth::user()->name)],
-        ] ;
-
-        $validator =Validator::make($data , $rules) ;
-        if($validator->fails()){
-            return redirect()->back()->withErrors($validator)->withInput($data);
-        } 
-            $profilePicture = $request->file('image');
-            $picName = time()."_".$profilePicture->getClientOriginalName();
-            $profilePicture->move('adminpanel\img' ,$picName);
-        Post::create([
-             'title' => $request->title,
-             'desc' => $request->desc , 
-             'image' => $picName , 
-             'author' => $request->author , 
-             'user_id' => $request->user_id ,
+        PostComment::create([
+            'comment' => $request->comment ,
+            'commenter'=> $request->commenter , 
+            'post_id' => $request->post_id , 
+            'user_id' => $request->user_id 
         ]);
+
         return redirect()->back();
     }
 
@@ -80,11 +57,7 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        // 
-        $comments = Post::findOrFail($id)->comments;
-        $replies = PostComment::find($id)->replies; 
-        $post = Post::findOrFail($id);
-        return view('admin.posts.show' , compact('post' , 'comments' , 'replies'));
+        //
     }
 
     /**
